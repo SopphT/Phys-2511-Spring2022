@@ -1,0 +1,91 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Feb  8 14:53:36 2022
+
+@author: sopyt
+"""
+
+import math as ma
+import matplotlib.pyplot as plt
+
+while True:
+
+    while True:
+        Vmag = float(input("What is the magnitude of the initial velocity? \n"))#get initial velocity magnitude
+        if Vmag <= 0:
+            print("No thank you.")
+        else:
+            break
+        
+    while True:
+        Vang = ma.pi/180*(float(input("What is the angle of the initial velocity? \n"))) #get initial velocity angle and convert from radians to degrees
+        if Vang < 0 or Vang > 2*ma.pi:
+            print("Maybe a different one...")
+        else: 
+            break
+        
+    while True:
+        timestep = float(input("What is the magnitude of the time step? \n")) #get timestep and store it as a float
+        if timestep < 0:
+            print("We don't want this value")
+        elif timestep > 1:
+            print("This is a really high value")
+        else:
+            break
+    
+    g = 9.8
+    
+    Vx = Vmag*ma.cos(Vang)
+    Vy = Vmag*ma.sin(Vang)
+    
+    X = 0
+    X_position = [X]
+    
+    Y = 0
+    Y_position = [Y]
+    
+    Ax = 0
+    Ay = -g
+    b = 0.5
+    
+    while Y >= 0:
+        X_new = X + Vx * timestep
+        X_position.append(X)
+        Y_new = Y + Vy * timestep
+        Y_position.append(Y)
+        Vx_new = Vx + Ax * timestep
+        Vy_new = Vy + Ay * timestep
+        Ax_new = -b * Vx
+        Ay_new = -g - b * Vy
+        X = X_new
+        Y = Y_new
+        Vx = Vx_new
+        Vy = Vy_new
+        Ax = Ax_new
+        Ay = Ay_new
+    
+    target_center = 30
+    distance_from_target_center = abs(target_center - X)
+    if distance_from_target_center <= 2:
+        print("Hit!")
+        break
+    else:
+        print("Oof, you missed by ", distance_from_target_center - 2, "meters. Let's try again.")
+    
+    plt.plot(X_position,Y_position)
+    plt.xlabel("X position (m)")
+    plt.ylabel("Y position (m)")
+    plt.title("Projectile motion WITH drag")
+    plt.show()
+    
+    
+    
+    horizontal_range = (Vmag*Vmag*ma.sin(2*Vang))/g
+    print("The horiztonal predicted range is: ", horizontal_range)
+    print("The 'actual' range is: ", X)
+    
+
+
+
+
